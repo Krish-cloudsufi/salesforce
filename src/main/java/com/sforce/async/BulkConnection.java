@@ -47,6 +47,8 @@ import com.sforce.ws.parser.XmlInputStream;
 import com.sforce.ws.parser.XmlOutputStream;
 import com.sforce.ws.transport.Transport;
 import com.sforce.ws.util.FileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -91,7 +93,7 @@ public class BulkConnection {
   public static final TypeMapper typeMapper = new TypeMapper(null, null, false);
   // CHECKSTYLE:ON: ConstantName
   private static final JsonFactory factory = new JsonFactory(new ObjectMapper());
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass(); // %EDIT%
+  private static final Logger logger = LoggerFactory.getLogger(BulkConnection.class); // %EDIT%
   private final ConnectorConfig config;
   private final HashMap<String, String> headers = new HashMap<String, String>();
 
@@ -226,16 +228,15 @@ public class BulkConnection {
         try {                                                                       // %EDIT%
           in.close();                                                               // %EDIT%
         } catch (IOException e) {                                                   // %EDIT%
-          logger.atWarning().log("Failed to close output stream with error:%s, cause:%s", e.getMessage(),
-                                 e.getCause()); // %EDIT%
-
+          logger.warn("Failed to close output stream with error: {}, cause: {}", e.getMessage(),
+                      e.getCause());                                                // %EDIT%
         }                                                                           // %EDIT%
       }                                                                             // %EDIT%
       if (out != null) {                                                            // %EDIT%
         try {                                                                       // %EDIT%
           out.close();                                                               // %EDIT%
         } catch (IOException e) {                                                   // %EDIT%
-          logger.atWarning().log("Failed to close output stream with error:%s, cause:%s", e.getMessage(),
+          logger.warn("Failed to close output stream with error: {}, cause: {}", e.getMessage(),
                                  e.getCause()); // %EDIT%
         }                                                                           // %EDIT%
       }
@@ -597,7 +598,7 @@ public class BulkConnection {
         try {                                                                       // %EDIT%
           stream.close();                                                           // %EDIT%
         } catch (IOException e) {                                                   // %EDIT%
-          logger.atWarning().log("Failed to close output stream with error:%s, cause:%s", e.getMessage(),
+          logger.warn("Failed to close output stream with error: {}, cause: {}", e.getMessage(),
                                  e.getCause());                                     // %EDIT%
         }                                                                           // %EDIT%
       }                                                                             // %EDIT%
@@ -634,7 +635,7 @@ public class BulkConnection {
         try {                                                                               // %EDIT%
           stream.close();                                                                   // %EDIT%
         } catch (IOException e) {                                                           // %EDIT%
-          logger.atWarning().log("Failed to close output stream with error:%s, cause:%s", e.getMessage(),
+          logger.warn("Failed to close output stream with error: {}, cause: {}", e.getMessage(),
                                  e.getCause());                                             // %EDIT%
         }                                                                                   // %EDIT%
       }
@@ -672,7 +673,7 @@ public class BulkConnection {
         try {                                                                               // %EDIT%
           stream.close();                                                                   // %EDIT%
         } catch (IOException e) {                                                           // %EDIT%
-          logger.atWarning().log("Failed to close output stream with error:%s, cause:%s", e.getMessage(),
+          logger.warn("Failed to close output stream with error: {}, cause: {}", e.getMessage(),
                                  e.getCause());                                             // %EDIT%
         }                                                                                   // %EDIT%
       }
@@ -739,7 +740,7 @@ public class BulkConnection {
         try {                                                                               // %EDIT%
           stream.close();                                                                   // %EDIT%
         } catch (IOException e) {                                                           // %EDIT%
-          logger.atWarning().log("Failed to close output stream with error:%s, cause:%s", e.getMessage(),
+          logger.warn("Failed to close output stream with error: {}, cause: {}", e.getMessage(),
                                  e.getCause());                                             // %EDIT%
         }                                                                                   // %EDIT%
       }
@@ -776,17 +777,17 @@ public class BulkConnection {
     try {
       in = connection.getInputStream();
     } catch (IOException e) {
-      logger.atWarning().withCause(e).log("IOException occurred while doHttpGet");     // %EDIT%
+      logger.warn("IOException occurred while doHttpGet", e);                               // %EDIT%
       success = false;
       InputStream errorStream = connection.getErrorStream(); // Get error stream separately // %EDIT%
       if (errorStream != null) {                                                            // %EDIT%
         try {                                                                               // %EDIT%
           responseBody = ByteStreams.toByteArray(errorStream);                              // %EDIT%
-          logger.atWarning().log("Received error response from %s. Status: %d. Response body: %s",  // %EDIT%
-                                 url.getPath(), connection.getResponseCode(), new String(responseBody));       // %EDIT%
+          logger.warn("Received error response from {}. Status: {}. Response body: {}",       // %EDIT%
+                      url.getPath(), connection.getResponseCode(), new String(responseBody)); // %EDIT%
           in = new ByteArrayInputStream(responseBody);                                      // %EDIT%
         } catch (IOException logEx) {                                                       // %EDIT%
-          logger.atWarning().withCause(logEx).log("Failed to read error stream for logging.");  // %EDIT%
+          logger.warn("Failed to read error stream for logging.", logEx);                   // %EDIT%
           // If reading for logging fails, and we couldn't get the response body, re-throw the original exception
           // %EDIT%
           if (responseBody == null) {                                                       // %EDIT%
@@ -796,12 +797,12 @@ public class BulkConnection {
           try {                                                                             // %EDIT%
             errorStream.close();                                                            // %EDIT%
           } catch (IOException closeEx) {                                                   // %EDIT%
-            logger.atWarning().withCause(closeEx).log("Failed to close error stream after reading."); // %EDIT%
+            logger.warn("Failed to close error stream after reading.", closeEx);     // %EDIT%
           }                                                                                 // %EDIT%
         }                                                                                   // %EDIT%
       } else {                                                                              // %EDIT%
-        logger.atWarning().log("Received error response from %s. Status: %d. Error stream is null.",  // %EDIT%
-                               url.getPath(), connection.getResponseCode());                            // %EDIT%
+        logger.warn("Received error response from {}. Status: {}. Error stream is null.",
+                    url.getPath(), connection.getResponseCode());       // %EDIT%
         // If error stream is null, re-throw the original exception as we have no response to process // %EDIT%
         throw e; // %EDIT%
       }
@@ -895,8 +896,8 @@ public class BulkConnection {
         try {                                                                             // %EDIT%
           in.close();                                                                     // %EDIT%
         } catch (IOException e) {                                                         // %EDIT%
-          logger.atWarning().log("Failed to close output stream with error:%s, cause:%s", e.getMessage(),
-                                 e.getCause());                                           // %EDIT%
+          logger.warn("Failed to close output stream with error: {}, cause: {}", e.getMessage(), e.getCause());
+          // %EDIT%
         }                                                                                 // %EDIT%
       }
     }
