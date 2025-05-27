@@ -34,7 +34,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.flogger.FluentLogger;
 import com.google.common.io.ByteStreams;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
