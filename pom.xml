@@ -141,11 +141,6 @@
       <version>${hydrator.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.google.flogger</groupId>
-      <artifactId>flogger-system-backend</artifactId>
-      <version>0.7.1</version>
-    </dependency>
-    <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-common</artifactId>
       <version>${hadoop.version}</version>
