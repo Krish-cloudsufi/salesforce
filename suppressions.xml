@@ -32,7 +32,7 @@
 
   <suppress checks="ConstantName"
             files="com/sforce/async/BulkConnection\.java"
-            lines="93"/>
+            lines="92"/>
 
   <!-- copied from apache hadoop, won't fix style to keep diff minimal -->
   <suppress checks=".*" files=".*[/\\]LocalJobRunnerWithFix.java" />
